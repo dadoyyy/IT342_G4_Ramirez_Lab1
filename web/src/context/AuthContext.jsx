@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
+import { authService } from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -12,28 +13,96 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [token, setToken] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const login = (userData) => {
-    setUser(userData)
-    setIsAuthenticated(true)
-    localStorage.setItem('user', JSON.stringify(userData))
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token')
+    const storedUser = localStorage.getItem('user')
+    
+    if (storedToken && storedUser) {
+      setToken(storedToken)
+      setUser(JSON.parse(storedUser))
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  const login = async (credentials) => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const data = await authService.login(credentials)
+      
+      setUser(data.user)
+      setToken(data.token)
+      setIsAuthenticated(true)
+      
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      
+      return { success: true }
+    } catch (err) {
+      setError(err.message)
+      return { success: false, error: err.message }
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const register = (userData) => {
-    setUser(userData)
-    setIsAuthenticated(true)
-    localStorage.setItem('user', JSON.stringify(userData))
+  const register = async (userData) => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const data = await authService.register(userData)
+      
+      setUser(data.user)
+      setToken(data.token)
+      setIsAuthenticated(true)
+      
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      
+      return { success: true }
+    } catch (err) {
+      setError(err.message)
+      return { success: false, error: err.message }
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const logout = () => {
-    setUser(null)
-    setIsAuthenticated(false)
-    localStorage.removeItem('user')
+  const logout = async () => {
+    try {
+      if (token) {
+        await authService.logout(token)
+      }
+    } catch (err) {
+      console.error('Logout error:', err)
+    } finally {
+      setUser(null)
+      setToken(null)
+      setIsAuthenticated(false)
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token,
+      isAuthenticated, 
+      login, 
+      register, 
+      logout,
+      error,
+      loading
+    }}>
       {children}
     </AuthContext.Provider>
   )
