@@ -25,7 +25,7 @@ export default function Dashboard() {
             <span className="nav-icon">📊</span>
             Dashboard
           </a>
-          <a href="#" className="nav-item">
+          <a href="#" onClick={() => navigate('/profile')} className="nav-item">
             <span className="nav-icon">👤</span>
             Profile
           </a>
@@ -94,7 +94,7 @@ export default function Dashboard() {
             <div className="activity-card">
               <h2>Quick Actions</h2>
               <div className="quick-actions">
-                <button className="action-btn" onClick={() => alert('Profile view coming soon')}>
+                <button className="action-btn" onClick={() => navigate('/profile')}>
                   <span className="action-icon">👤</span>
                   <span>View Full Profile</span>
                 </button>
