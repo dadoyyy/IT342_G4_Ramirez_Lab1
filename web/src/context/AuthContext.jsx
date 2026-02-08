@@ -20,13 +20,26 @@ export const AuthProvider = ({ children }) => {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem('token')
-    const storedUser = localStorage.getItem('user')
-    
-    if (storedToken && storedUser) {
-      setToken(storedToken)
-      setUser(JSON.parse(storedUser))
-      setIsAuthenticated(true)
+    const useMock = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_USE_MOCK === 'true'
+
+    // If mock mode is enabled, restore session from localStorage for convenience.
+    // If mock mode is disabled (we require backend), clear stored session to force real auth.
+    if (useMock) {
+      const storedToken = localStorage.getItem('token')
+      const storedUser = localStorage.getItem('user')
+
+      if (storedToken && storedUser) {
+        setToken(storedToken)
+        setUser(JSON.parse(storedUser))
+        setIsAuthenticated(true)
+      }
+    } else {
+      // Ensure no leftover mock session remains when real backend is required
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      setToken(null)
+      setUser(null)
+      setIsAuthenticated(false)
     }
   }, [])
 
