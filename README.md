@@ -1,85 +1,71 @@
-# IT342_G4_Ramirez_Lab1 - MediGo Authentication System
 
-Full-stack authentication mini-app with React frontend and Node.js backend.
+# IT342_G4_Ramirez_Lab1
 
-## Project Structure
+Project repository for the IT342 group lab work. This project contains a Java "mini-app" backend, a React web frontend, and a placeholder for a mobile app.
 
-```
-IT342_G4_Ramirez_Lab1/
-├── web/          # React frontend (Vite)
-├── backend/      # Node.js + Express API
-├── mobile/       # Mobile app (future)
-├── docs/         # Documentation
-└── README.md
-```
+**Project Description**: A small full-stack sample application used for the course lab. The backend is a Maven-based Java application (Spring Boot), the web frontend is a React app bootstrapped with Vite, and a `mobile/` folder is reserved for mobile code.
 
-## Quick Start
+**Technologies Used**
+- **Backend**: Java, Spring Boot, Maven
+- **Web**: React, Vite, JavaScript
+- **Build tools**: Maven (backend), npm + Vite (web)
+- **Platform**: JVM (OpenJDK 11+ recommended)
 
-### 1. Start Backend (Terminal 1)
+**Run the backend**
+- Open a terminal and change directory:
 
-```cmd
-cd backend
-npm install
-npm run dev
-```
+	`cd backend\mini-app`
 
-Backend runs on: **http://localhost:3001**
+- On Windows (using the included wrapper):
 
-### 2. Start Frontend (Terminal 2)
+	`mvnw.cmd spring-boot:run`
 
-```cmd
-cd web
-npm install
-npm run dev
-```
+- On macOS / Linux (if needed):
 
-Frontend runs on: **http://localhost:5173** (or 5174)
+	`./mvnw spring-boot:run`
 
-## Features
+- Alternatively, run the built JAR (requires a Java runtime):
 
-✅ User Registration with validation  
-✅ User Login with JWT authentication  
-✅ Protected Dashboard route  
-✅ Profile information display  
-✅ Logout functionality  
-✅ Modern web app layout with sidebar navigation  
-✅ Real-time error handling  
-✅ Token-based session management
+	`java -jar target\mini-app-0.0.1-SNAPSHOT.jar`
 
-## API Endpoints
+- Default server address: `http://localhost:8080` (confirm in `application.properties`)
 
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/profile` - Get user profile (protected)
-- `POST /api/auth/logout` - Logout user (protected)
+**Run the web app (frontend)**
+- Change directory to the web frontend:
 
-## Tech Stack
+	`cd web`
 
-**Frontend:**
-- React 19
-- React Router DOM
-- Vite
-- CSS3
+- Install dependencies (one-time):
 
-**Backend:**
-- Node.js + Express
-- JWT (jsonwebtoken)
-- bcryptjs
-- CORS enabled
+	`npm install`
 
-## Development
+- Start the dev server (Vite):
 
-Both servers support hot reload during development.
+	`npm run dev`
 
-For more details, see:
-- [Backend README](backend/README.md)
-- [Frontend README](web/README.md)
+- The dev server usually opens at `http://localhost:5173` (check the terminal output).
 
-## How to Use
+**Run the mobile app**
+- The `mobile/` folder currently contains no app. Add your mobile project (React Native, Flutter, or similar) under `mobile/` and include platform-specific start instructions.
 
-1. Start both backend and frontend servers
-2. Open http://localhost:5173 in your browser
-3. Register a new account
-4. Login with your credentials
-5. View your dashboard with profile info and stats
-6. Logout when done
+**List of API endpoints**
+The repository currently does not expose a machine-readable list of controller routes. Below are common endpoints used by the project frontends — treat these as examples and update them to match the actual controllers in `backend/mini-app`.
+
+- `POST /api/auth/login` — authenticate user and return token/session
+- `POST /api/auth/register` — create a new user
+- `GET /api/users` — list users (protected)
+- `GET /api/profile` — get the current user profile (protected)
+- `GET /actuator/health` — health check (if Spring Boot actuator enabled)
+
+To discover the real endpoints for this backend:
+- Start the backend (`mvnw spring-boot:run` or run the JAR)
+- Visit `http://localhost:8080` and test endpoints with `curl` or Postman
+- If the source controllers are present, inspect `src/main/java/.../controller` or search for `@RestController` annotations in the backend source.
+
+If you'd like, I can:
+- search the repo for references to specific endpoints and update this list, or
+- run the backend and probe for endpoints, then update the README with exact routes.
+
+---
+
+If you want me to commit and push this `README.md` change, tell me and I'll run the git commit + push commands for you.
