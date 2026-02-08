@@ -1,6 +1,8 @@
+import mockAuthService from './mockApi'
+
 const API_URL = 'http://localhost:3001/api/auth'
 
-export const authService = {
+const realAuthService = {
   async register(userData) {
     const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
@@ -9,13 +11,13 @@ export const authService = {
       },
       body: JSON.stringify(userData),
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Registration failed')
     }
-    
+
     return data
   },
 
@@ -27,13 +29,13 @@ export const authService = {
       },
       body: JSON.stringify(credentials),
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Login failed')
     }
-    
+
     return data
   },
 
@@ -44,13 +46,13 @@ export const authService = {
         'Authorization': `Bearer ${token}`,
       },
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to fetch profile')
     }
-    
+
     return data
   },
 
@@ -61,13 +63,20 @@ export const authService = {
         'Authorization': `Bearer ${token}`,
       },
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Logout failed')
     }
-    
+
     return data
   }
 }
+
+// Switch to mock when Vite env var VITE_USE_MOCK=true
+const USE_MOCK = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_USE_MOCK === 'true'
+
+export const authService = USE_MOCK ? mockAuthService : realAuthService
+
+export default authService

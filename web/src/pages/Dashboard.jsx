@@ -18,7 +18,7 @@ export default function Dashboard() {
     <div className="dashboard-layout">
       <aside className="sidebar">
         <div className="sidebar-header">
-          <h2>MediGo</h2>
+          <h2>MiniApp</h2>
         </div>
         <nav className="sidebar-nav">
           <a href="#" className="nav-item active">
@@ -28,18 +28,6 @@ export default function Dashboard() {
           <a href="#" className="nav-item">
             <span className="nav-icon">👤</span>
             Profile
-          </a>
-          <a href="#" className="nav-item">
-            <span className="nav-icon">⚙️</span>
-            Settings
-          </a>
-          <a href="#" className="nav-item">
-            <span className="nav-icon">📈</span>
-            Analytics
-          </a>
-          <a href="#" className="nav-item">
-            <span className="nav-icon">📧</span>
-            Messages
           </a>
         </nav>
       </aside>
@@ -69,24 +57,14 @@ export default function Dashboard() {
         <div className="content-wrapper">
           <div className="stats-grid">
             <div className="stat-card stat-primary">
-              <h3>Total Sessions</h3>
-              <p className="stat-value">24</p>
-              <p className="stat-label">Active this month</p>
-            </div>
-            <div className="stat-card stat-success">
               <h3>Account Status</h3>
               <p className="stat-value">Active</p>
-              <p className="stat-label">Since registration</p>
+              <p className="stat-label">All systems operational</p>
             </div>
             <div className="stat-card stat-info">
-              <h3>Last Login</h3>
-              <p className="stat-value">Today</p>
-              <p className="stat-label">5:30 PM</p>
-            </div>
-            <div className="stat-card stat-warning">
-              <h3>Security</h3>
-              <p className="stat-value">100%</p>
-              <p className="stat-label">All checks passed</p>
+              <h3>User ID</h3>
+              <p className="stat-value">#{user?.user_id || Math.floor(Math.random() * 10000)}</p>
+              <p className="stat-label">Your unique identifier</p>
             </div>
           </div>
 
@@ -114,37 +92,17 @@ export default function Dashboard() {
             </div>
 
             <div className="activity-card">
-              <h2>Recent Activity</h2>
-              <ul className="activity-list">
-                <li className="activity-item">
-                  <div className="activity-icon">📝</div>
-                  <div className="activity-content">
-                    <p className="activity-title">Profile Updated</p>
-                    <p className="activity-time">2 hours ago</p>
-                  </div>
-                </li>
-                <li className="activity-item">
-                  <div className="activity-icon">🔐</div>
-                  <div className="activity-content">
-                    <p className="activity-title">Password Changed</p>
-                    <p className="activity-time">1 day ago</p>
-                  </div>
-                </li>
-                <li className="activity-item">
-                  <div className="activity-icon">✅</div>
-                  <div className="activity-content">
-                    <p className="activity-title">Account Verified</p>
-                    <p className="activity-time">3 days ago</p>
-                  </div>
-                </li>
-                <li className="activity-item">
-                  <div className="activity-icon">🎯</div>
-                  <div className="activity-content">
-                    <p className="activity-title">Account Created</p>
-                    <p className="activity-time">1 week ago</p>
-                  </div>
-                </li>
-              </ul>
+              <h2>Quick Actions</h2>
+              <div className="quick-actions">
+                <button className="action-btn" onClick={() => alert('Profile view coming soon')}>
+                  <span className="action-icon">👤</span>
+                  <span>View Full Profile</span>
+                </button>
+                <button className="action-btn" onClick={handleLogout}>
+                  <span className="action-icon">🚪</span>
+                  <span>Logout</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

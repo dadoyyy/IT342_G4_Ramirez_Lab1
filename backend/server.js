@@ -17,11 +17,11 @@ app.use('/api/auth', authRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'MediGo API is running' })
+  res.json({ status: 'OK', message: 'MiniApp API is running' })
 })
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 MediGo Backend API running on http://localhost:${PORT}`)
+  console.log(`🚀 MiniApp Backend API running on http://localhost:${PORT}`)
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`)
 })

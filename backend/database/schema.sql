@@ -1,7 +1,7 @@
 -- Create database
-CREATE DATABASE IF NOT EXISTS medigo_db;
+CREATE DATABASE IF NOT EXISTS miniapp_db;
 
-USE medigo_db;
+USE miniapp_db;
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
