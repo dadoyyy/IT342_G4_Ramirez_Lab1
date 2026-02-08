@@ -1,9 +1,12 @@
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useState } from 'react'
+import LogoutConfirm from '../components/LogoutConfirm'
 
 export default function Dashboard() {
   const navigate = useNavigate()
   const { user, isAuthenticated, logout } = useAuth()
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
@@ -12,6 +15,11 @@ export default function Dashboard() {
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false)
+    handleLogout()
   }
 
   return (
@@ -47,7 +55,7 @@ export default function Dashboard() {
                 <p className="user-name">{user?.firstName} {user?.lastName}</p>
                 <p className="user-email">{user?.email}</p>
               </div>
-              <button onClick={handleLogout} className="btn-logout-header">
+              <button onClick={() => setShowLogoutModal(true)} className="btn-logout-header">
                 Logout
               </button>
             </div>
@@ -98,7 +106,7 @@ export default function Dashboard() {
                   <span className="action-icon">👤</span>
                   <span>View Full Profile</span>
                 </button>
-                <button className="action-btn" onClick={handleLogout}>
+                <button className="action-btn" onClick={() => setShowLogoutModal(true)}>
                   <span className="action-icon">🚪</span>
                   <span>Logout</span>
                 </button>
@@ -107,6 +115,12 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      <LogoutConfirm 
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={() => setShowLogoutModal(false)}
+      />
     </div>
   )
 }

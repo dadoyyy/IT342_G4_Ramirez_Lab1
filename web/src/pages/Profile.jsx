@@ -1,9 +1,12 @@
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useState } from 'react'
+import LogoutConfirm from '../components/LogoutConfirm'
 
 export default function Profile() {
   const navigate = useNavigate()
   const { user, isAuthenticated, logout } = useAuth()
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
@@ -12,6 +15,11 @@ export default function Profile() {
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false)
+    handleLogout()
   }
 
   return (
@@ -47,7 +55,7 @@ export default function Profile() {
                 <p className="user-name">{user?.firstName} {user?.lastName}</p>
                 <p className="user-email">{user?.email}</p>
               </div>
-              <button onClick={handleLogout} className="btn-logout-header">
+              <button onClick={() => setShowLogoutModal(true)} className="btn-logout-header">
                 Logout
               </button>
             </div>
@@ -99,6 +107,12 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      <LogoutConfirm 
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={() => setShowLogoutModal(false)}
+      />
     </div>
   )
 }
