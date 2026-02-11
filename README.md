@@ -55,7 +55,7 @@ The repository currently does not expose a machine-readable list of controller r
 - `POST /api/auth/register` — create a new user
 - `GET /api/users` — list users (protected)
 - `GET /api/profile` — get the current user profile (protected)
-- `GET /actuator/health` — health check (if Spring Boot actuator enabled)
+-- `GET /api/status` — status endpoint
 
 To discover the real endpoints for this backend:
 - Start the backend (`mvnw spring-boot:run` or run the JAR)

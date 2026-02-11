@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Find user
-    const user = UserModel.findByEmail(email)
+    const user = await UserModel.findByEmail(email)
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
@@ -85,7 +85,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Update last login
-    UserModel.updateLastLogin(user.user_id)
+    await UserModel.updateLastLogin(user.user_id)
 
     // Generate token
     const token = jwt.sign(
@@ -111,10 +111,10 @@ router.post('/login', async (req, res) => {
 })
 
 // Get profile endpoint (protected)
-router.get('/profile', authMiddleware, (req, res) => {
+router.get('/profile', authMiddleware, async (req, res) => {
   try {
-    const user = UserModel.findById(req.userId)
-    
+    const user = await UserModel.findById(req.userId)
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
