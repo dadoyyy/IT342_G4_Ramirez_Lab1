@@ -90,6 +90,20 @@ export default function RegisterForm() {
           required
           disabled={loading}
         />
+        <div style={{ 
+          marginTop: '0.5rem', 
+          fontSize: '0.75rem', 
+          color: '#6b7280',
+          lineHeight: '1.5'
+        }}>
+          Password must contain:
+          <ul style={{ margin: '0.25rem 0 0 1.25rem', paddingLeft: 0 }}>
+            <li>More than 8 characters</li>
+            <li>At least one uppercase letter</li>
+            <li>At least one lowercase letter</li>
+            <li>At least one special character</li>
+          </ul>
+        </div>
       </div>
       <button type="submit" className="btn-primary" disabled={loading}>
         {loading ? 'Creating account...' : 'Register'}
