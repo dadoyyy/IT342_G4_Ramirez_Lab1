@@ -1,8 +1,6 @@
-import mockAuthService from './mockApi'
-
 const API_URL = 'http://localhost:3001/api/auth'
 
-const realAuthService = {
+const authService = {
   async register(userData) {
     const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
@@ -74,9 +72,5 @@ const realAuthService = {
   }
 }
 
-// Switch to mock when Vite env var VITE_USE_MOCK=true
-const USE_MOCK = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_USE_MOCK === 'true'
-
-export const authService = USE_MOCK ? mockAuthService : realAuthService
-
+export { authService }
 export default authService

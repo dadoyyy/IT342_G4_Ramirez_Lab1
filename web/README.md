@@ -1,4 +1,4 @@
-# MediGo Web — User Authentication Frontend
+# MiniApp Web — User Authentication Frontend
 
 Modern React + Vite frontend demonstrating a complete user authentication flow aligned with the ERD, use cases, activity diagram, and sequence diagram.
 

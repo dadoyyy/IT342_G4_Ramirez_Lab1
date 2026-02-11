@@ -15,13 +15,13 @@ app.use(express.json())
 // Routes
 app.use('/api/auth', authRoutes)
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'MiniApp API is running' })
+// Status endpoint
+app.get('/api/status', (req, res) => {
+  res.json({ status: 'OK', app: 'mini-app' })
 })
 
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 MiniApp Backend API running on http://localhost:${PORT}`)
-  console.log(`📡 Health check: http://localhost:${PORT}/api/health`)
+  console.log(`📡 Status endpoint: http://localhost:${PORT}/api/status`)
 })
