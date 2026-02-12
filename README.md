@@ -19,22 +19,18 @@ MiniApp is a secure user authentication and profile management application that 
 
 ## 🛠️ Tech Stack
 
-### Backend (Dual Architecture)
-- **Node.js Backend** (Primary - Port 3001)
-  - Express.js 4.18.2
-  - MySQL2 3.6.5 (database driver)
-  - bcryptjs 2.4.3 (password hashing)
-  - jsonwebtoken 9.0.2 (JWT authentication)
-  - CORS support
-  - Nodemon (development)
-
-- **Spring Boot Backend** (Secondary - Port 8080)
+### Backend
+- **Spring Boot** (Primary - Port 8080)
   - Spring Boot 4.0.2
-  - Java 17 (JDK 17 required)
-  - Spring Data JPA
-  - Hibernate 7.2.1.Final
-  - MySQL Connector
-  - Maven build tool
+  - Java 17/23 (JDK 17+ required)
+  - Spring Security 7.0.2 (authentication & authorization)
+  - Spring Data JPA (data persistence)
+  - Hibernate 7.2.1.Final (ORM)
+  - MySQL Connector 9.1.0
+  - JJWT 0.11.5 (JWT token generation & validation)
+  - BCrypt (password hashing via Spring Security)
+  - Maven 3.9.9 (build tool)
+  - Bean Validation (input validation)
 
 ### Frontend
 - React 18.3.1
@@ -104,63 +100,9 @@ MiniApp is a secure user authentication and profile management application that 
 
 ## 🎯 How to Run
 
-### 1. Run Node.js Backend (Port 3001) - REQUIRED for Web App
+### 1. Run Spring Boot Backend (Port 8080) - REQUIRED
 
-The Node.js backend is the primary backend used by the React frontend.
-
-1. **Navigate to backend directory**:
-   ```bash
-   cd backend
-   ```
-
-2. **Configure Environment Variables**:
-   
-   Create a `.env` file in the `backend/` directory:
-   ```env
-   PORT=3001
-   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=
-   DB_NAME=miniapp_db
-   ```
-
-3. **Install dependencies** (first time only):
-   ```bash
-   npm install
-   ```
-
-4. **Start the server**:
-   
-   **Development mode** (with auto-restart):
-   ```bash
-   npm run dev
-   ```
-   
-   **Production mode**:
-   ```bash
-   npm start
-   ```
-
-5. **Verify it's running**:
-   - You should see: `🚀 MiniApp Backend API running on http://localhost:3001`
-   - Test the status endpoint: `http://localhost:3001/api/status`
-
-**Troubleshooting**:
-- If port 3001 is already in use:
-  ```bash
-  # Windows
-  netstat -ano | findstr :3001
-  taskkill /F /PID <process_id>
-  
-  # macOS/Linux
-  lsof -i :3001
-  kill -9 <process_id>
-  ```
-
-### 2. Run Spring Boot Backend (Port 8080) - OPTIONAL
-
-The Spring Boot backend is a secondary backend for Java/JPA demonstrations.
+The Spring Boot backend is the primary backend used by the React frontend.
 
 1. **Navigate to Spring Boot directory**:
    ```bash
@@ -169,7 +111,7 @@ The Spring Boot backend is a secondary backend for Java/JPA demonstrations.
 
 2. **Configure Database**:
    
-   Edit `src/main/resources/application.properties`:
+   Edit `src/main/resources/application.properties` (already configured):
    ```properties
    spring.application.name=mini-app
    
@@ -182,12 +124,17 @@ The Spring Boot backend is a secondary backend for Java/JPA demonstrations.
    # JPA/Hibernate
    spring.jpa.show-sql=true
    spring.jpa.hibernate.ddl-auto=update
+   spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+   
+   # JWT Configuration
+   jwt.secret=your-super-secret-jwt-key-change-this-in-production-environment-2026
+   jwt.expiration=86400000
    
    # Server Port
    server.port=8080
    ```
 
-3. **Set Java 17** (CRITICAL):
+3. **Set Java 17+** (CRITICAL):
    
    **Windows**:
    ```powershell
@@ -217,9 +164,24 @@ The Spring Boot backend is a secondary backend for Java/JPA demonstrations.
    java -jar target/mini-app-0.0.1-SNAPSHOT.jar
    ```
 
-5. **Verify**: Visit `http://localhost:8080`
+5. **Verify it's running**:
+   - You should see: `Started MiniAppApplication in X.XXX seconds`
+   - Test the status endpoint: `http://localhost:8080/api/auth/status`
+   - Expected response: `{"status":"OK","app":"mini-app"}`
 
-### 3. Run Web Frontend (Port 5173)
+**Troubleshooting**:
+- If port 8080 is already in use:
+  ```bash
+  # Windows
+  netstat -ano | findstr :8080
+  taskkill /F /PID <process_id>
+  
+  # macOS/Linux
+  lsof -i :8080
+  kill -9 <process_id>
+  ```
+
+### 2. Run Web Frontend (Port 5173)
 
 1. **Navigate to web directory**:
    ```bash
@@ -246,9 +208,9 @@ The Spring Boot backend is a secondary backend for Java/JPA demonstrations.
    npm run preview
    ```
 
-**Note**: The web app connects to the **Node.js backend on port 3001**, not the Spring Boot backend.
+**Note**: The web app connects to the **Spring Boot backend on port 8080**.
 
-### 4. Run Mobile App
+### 3. Run Mobile App
 
 The `mobile/` folder is currently a placeholder for future mobile development.
 
@@ -259,39 +221,44 @@ The `mobile/` folder is currently a placeholder for future mobile development.
 
 ## ⚙️ Configuration & Environment Variables
 
-### Backend (Node.js) - `backend/.env`
-```env
-PORT=3001                    # Server port
-JWT_SECRET=your-secret-key   # Secret for JWT token signing (CHANGE IN PRODUCTION!)
-DB_HOST=localhost            # MySQL host
-DB_USER=root                 # MySQL username
-DB_PASSWORD=                 # MySQL password (empty for development)
-DB_NAME=miniapp_db          # Database name
-```
-
-**Security Note**: Never commit `.env` file to version control. Change `JWT_SECRET` before deploying to production.
-
 ### Backend (Spring Boot) - `backend/mini-app/src/main/resources/application.properties`
 ```properties
+# Application Name
+spring.application.name=mini-app
+
+# MySQL Configuration
 spring.datasource.url=jdbc:mysql://localhost:3306/miniapp_db
 spring.datasource.username=root
 spring.datasource.password=
-server.port=8080
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA/Hibernate
+spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+# JWT Configuration
+jwt.secret=your-super-secret-jwt-key-change-this-in-production-environment-2026
+jwt.expiration=86400000
+
+# Server Port
+server.port=8080
 ```
+
+**Security Note**: Change `jwt.secret` before deploying to production. Never commit sensitive credentials to version control.
 
 ### Frontend - API Configuration
 
 The frontend API base URL is configured in `web/src/services/api.js`:
 ```javascript
-const API_URL = 'http://localhost:3001/api/auth'
+const API_URL = 'http://localhost:8080/api/auth'
 ```
 
 To change the backend URL (e.g., for production), edit this constant.
 
 ## 📡 API Endpoints
 
-All Node.js backend endpoints are prefixed with `/api/auth` and run on port **3001**.
+All Spring Boot backend endpoints are prefixed with `/api/auth` and run on port **8080**.
 
 ### Public Endpoints (No Authentication Required)
 
@@ -317,24 +284,22 @@ Create a new user account.
 **Success Response** (201):
 ```json
 {
-  "message": "User registered successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
-    "user_id": 1,
+    "userId": 1,
     "firstName": "John",
     "lastName": "Doe",
     "email": "john.doe@example.com",
-    "status": "active",
-    "created_at": "2026-02-11T10:30:00.000Z"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "status": "ACTIVE"
+  }
 }
 ```
 
 **Error Response** (400):
 ```json
 {
-  "message": "Password does not meet requirements",
-  "errors": [
+  "error": "Password does not meet requirements",
+  "details": [
     "Password must be more than 8 characters",
     "Password must contain at least one uppercase letter"
   ]
@@ -355,22 +320,21 @@ Authenticate user and receive JWT token.
 **Success Response** (200):
 ```json
 {
-  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
-    "user_id": 1,
+    "userId": 1,
     "firstName": "John",
     "lastName": "Doe",
     "email": "john.doe@example.com",
-    "status": "active"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "status": "ACTIVE"
+  }
 }
 ```
 
 **Error Response** (401):
 ```json
 {
-  "message": "Invalid credentials"
+  "error": "Invalid credentials"
 }
 ```
 
@@ -387,22 +351,18 @@ Get current user's profile information.
 **Success Response** (200):
 ```json
 {
-  "user": {
-    "user_id": 1,
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john.doe@example.com",
-    "status": "active",
-    "created_at": "2026-02-11T10:30:00.000Z",
-    "updated_at": "2026-02-11T10:30:00.000Z"
-  }
+  "userId": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "status": "ACTIVE"
 }
 ```
 
 **Error Response** (401):
 ```json
 {
-  "message": "Invalid or expired token"
+  "error": "Invalid or expired token"
 }
 ```
 
@@ -418,15 +378,14 @@ Log out current user (invalidates session on client side).
 
 ### Status Endpoint
 
-#### `GET /api/status`
+#### `GET /api/auth/status`
 Check if the backend server is running.
 
 **Success Response** (200):
 ```json
 {
   "status": "OK",
-  "message": "MiniApp Backend API is running",
-  "timestamp": "2026-02-11T10:30:00.000Z"
+  "app": "mini-app"
 }
 ```
 
@@ -434,28 +393,36 @@ Check if the backend server is running.
 
 ```
 IT342_G4_Ramirez_Lab1/
-├── backend/                    # Node.js backend (PRIMARY)
-│   ├── config/
-│   │   └── database.js        # MySQL connection pool
-│   ├── database/
-│   │   ├── schema.sql         # Database schema
-│   │   └── SETUP.md           # Database setup guide
-│   ├── middleware/
-│   │   └── auth.js            # JWT authentication middleware
-│   ├── models/
-│   │   └── User.js            # User data access layer
-│   ├── routes/
-│   │   └── auth.js            # Authentication routes
-│   ├── mini-app/              # Spring Boot backend (SECONDARY)
+├── backend/                    # Legacy Node.js files (not used)
+│   ├── mini-app/              # Spring Boot Backend (PRIMARY)
 │   │   ├── src/main/
-│   │   │   ├── java/
+│   │   │   ├── java/com/example/mini_app/
+│   │   │   │   ├── MiniAppApplication.java
+│   │   │   │   ├── config/
+│   │   │   │   │   └── SecurityConfig.java
+│   │   │   │   ├── controller/
+│   │   │   │   │   └── AuthController.java
+│   │   │   │   ├── dto/
+│   │   │   │   │   ├── RegisterRequest.java
+│   │   │   │   │   ├── LoginRequest.java
+│   │   │   │   │   ├── AuthResponse.java
+│   │   │   │   │   ├── UserResponse.java
+│   │   │   │   │   └── ErrorResponse.java
+│   │   │   │   ├── entity/
+│   │   │   │   │   └── User.java
+│   │   │   │   ├── repository/
+│   │   │   │   │   └── UserRepository.java
+│   │   │   │   ├── service/
+│   │   │   │   │   └── AuthService.java
+│   │   │   │   └── util/
+│   │   │   │       └── JwtUtil.java
 │   │   │   └── resources/
 │   │   │       └── application.properties
 │   │   ├── pom.xml
 │   │   └── mvnw.cmd
-│   ├── .env                   # Environment variables (create this)
-│   ├── package.json
-│   └── server.js              # Node.js entry point
+│   └── database/
+│       ├── schema.sql         # Database schema
+│       └── SETUP.md           # Database setup guide
 ├── web/                       # React frontend
 │   ├── src/
 │   │   ├── components/
@@ -484,7 +451,7 @@ IT342_G4_Ramirez_Lab1/
 
 ### Manual Testing Flow
 
-1. **Start Backend**: `cd backend && npm run dev`
+1. **Start Backend**: `cd backend/mini-app && mvnw.cmd spring-boot:run`
 2. **Start Frontend**: `cd web && npm run dev`
 3. **Open Browser**: `http://localhost:5173`
 
@@ -510,26 +477,29 @@ IT342_G4_Ramirez_Lab1/
 
 ## 🔒 Security Notes
 
-- Passwords are hashed with bcrypt (salt rounds: 10)
-- JWT tokens expire after 24 hours
-- Protected routes require valid JWT token
+- Passwords are hashed with BCrypt via Spring Security (default strength)
+- JWT tokens expire after 24 hours (configurable in application.properties)
+- Protected routes require valid JWT token in Authorization header
 - Email addresses are unique (enforced at database level)
-- CORS is enabled for development (configure for production)
-- **IMPORTANT**: Change `JWT_SECRET` before production deployment
-- Never commit `.env` files to version control
+- CORS is configured for development (update SecurityConfig.java for production)
+- **IMPORTANT**: Change `jwt.secret` in application.properties before production deployment
+- Spring Security provides stateless session management
+- Password validation enforces strong password requirements
 
 ## 🐛 Troubleshooting
 
 ### Backend won't start
-- Check if MySQL is running: `mysql -u root -p`
+- Check if MySQL is running: `C:\xampp\mysql\bin\mysql -u root -p`
 - Verify database exists: `SHOW DATABASES;`
-- Check port 3001 is not in use
-- Ensure `.env` file exists with correct values
+- Check port 8080 is not in use
+- Verify Java 17+ is installed: `java -version`
+- Set JAVA_HOME to correct JDK path
 
 ### Frontend connection refused
-- Verify Node.js backend is running on port 3001
+- Verify Spring Boot backend is running on port 8080
 - Check API_URL in `web/src/services/api.js`
 - Check browser console for CORS errors
+- Verify backend status: `http://localhost:8080/api/auth/status`
 
 ### Password validation errors
 - Ensure password is MORE than 8 characters (minimum 9)
@@ -537,10 +507,11 @@ IT342_G4_Ramirez_Lab1/
 - Include at least one lowercase letter (a-z)
 - Include at least one special character (!@#$%^&*()_+-=[]{};':"\\|,.<>/?)
 
-### Spring Boot won't compile
-- Verify Java 17 is installed: `java -version`
-- Set JAVA_HOME to JDK 17 path
-- Run `mvnw.cmd clean install` to rebuild
+### Database connection errors
+- Verify MySQL is running on port 3306
+- Check database credentials in application.properties
+- Ensure miniapp_db database exists
+- Verify MySQL Connector version compatibility
 
 ### Session lost on refresh
 - Check browser localStorage for 'token' and 'user' keys
