@@ -71,7 +71,7 @@ export default function Dashboard() {
             </div>
             <div className="stat-card stat-info">
               <h3>User ID</h3>
-              <p className="stat-value">#{user?.user_id || Math.floor(Math.random() * 10000)}</p>
+              <p className="stat-value">#{user?.userId || 'N/A'}</p>
               <p className="stat-label">Your unique identifier</p>
             </div>
           </div>
