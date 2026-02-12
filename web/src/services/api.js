@@ -1,6 +1,6 @@
-const API_URL = 'http://localhost:3001/api/auth'
+const API_URL = 'http://localhost:8080/api/auth'
 
-export const authService = {
+const authService = {
   async register(userData) {
     const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
@@ -9,13 +9,13 @@ export const authService = {
       },
       body: JSON.stringify(userData),
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Registration failed')
     }
-    
+
     return data
   },
 
@@ -27,13 +27,13 @@ export const authService = {
       },
       body: JSON.stringify(credentials),
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Login failed')
     }
-    
+
     return data
   },
 
@@ -44,13 +44,13 @@ export const authService = {
         'Authorization': `Bearer ${token}`,
       },
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to fetch profile')
     }
-    
+
     return data
   },
 
@@ -61,13 +61,16 @@ export const authService = {
         'Authorization': `Bearer ${token}`,
       },
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Logout failed')
     }
-    
+
     return data
   }
 }
+
+export { authService }
+export default authService

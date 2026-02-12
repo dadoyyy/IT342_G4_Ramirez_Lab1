@@ -6,7 +6,7 @@ export default function Register() {
     <div className="auth-container">
       <div className="auth-card">
         <h1>Register</h1>
-        <p>Create your MediGo account</p>
+        <p>Create your MiniApp account</p>
         <RegisterForm />
         <p className="auth-link">
           Already have an account? <Link to="/login">Login</Link>
