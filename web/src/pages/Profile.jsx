@@ -95,7 +95,7 @@ export default function Profile() {
                   </div>
                   <div className="profile-info-item">
                     <span className="profile-label">User ID</span>
-                    <span className="profile-value">#{user?.user_id || Math.floor(Math.random() * 10000)}</span>
+                    <span className="profile-value">#{user?.userId || 'N/A'}</span>
                   </div>
                   <div className="profile-info-item">
                     <span className="profile-label">Member Since</span>
