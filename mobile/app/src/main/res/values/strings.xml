@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">MiniApp</string>
+    
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_logout">Logout</string>
+    
+    <!-- Auth -->
+    <string name="login_title">Login</string>
+    <string name="register_title">Register</string>
+    <string name="welcome_message">Welcome back to MiniApp</string>
+    <string name="create_account_message">Create your MiniApp account</string>
+    
+    <!-- Form labels -->
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    
+    <!-- Buttons -->
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="logout_button">Logout</string>
+    
+    <!-- Links -->
+    <string name="no_account">Don\'t have an account? Register</string>
+    <string name="have_account">Already have an account? Login</string>
+    
+    <!-- Password requirements -->
+    <string name="password_requirements">Password must contain:\n• More than 8 characters\n• At least one uppercase letter\n• At least one lowercase letter\n• At least one special character</string>
+</resources>
