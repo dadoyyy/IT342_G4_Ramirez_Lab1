@@ -12,23 +12,15 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [token, setToken] = useState(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  // Initialize state from localStorage to prevent redirect on refresh
+  const storedToken = localStorage.getItem('token')
+  const storedUser = localStorage.getItem('user')
+  
+  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null)
+  const [token, setToken] = useState(storedToken)
+  const [isAuthenticated, setIsAuthenticated] = useState(!!storedToken && !!storedUser)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token')
-    const storedUser = localStorage.getItem('user')
-    
-    if (storedToken && storedUser) {
-      setToken(storedToken)
-      setUser(JSON.parse(storedUser))
-      setIsAuthenticated(true)
-    }
-  }, [])
 
   const login = async (credentials) => {
     try {

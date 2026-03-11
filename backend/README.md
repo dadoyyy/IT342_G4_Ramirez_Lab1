@@ -1,6 +1,6 @@
-# MediGo Backend API
+# MiniApp Backend API
 
-Authentication API for the MediGo application.
+Authentication API for the MiniApp application.
 
 ## Setup
 

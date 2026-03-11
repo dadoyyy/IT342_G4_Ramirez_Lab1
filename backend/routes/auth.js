@@ -6,6 +6,32 @@ import { authMiddleware } from '../middleware/auth.js'
 
 const router = express.Router()
 
+// Password validation function
+const validatePassword = (password) => {
+  const errors = []
+  
+  if (password.length <= 8) {
+    errors.push('Password must be more than 8 characters')
+  }
+  
+  if (!/[A-Z]/.test(password)) {
+    errors.push('Password must contain at least one uppercase letter')
+  }
+  
+  if (!/[a-z]/.test(password)) {
+    errors.push('Password must contain at least one lowercase letter')
+  }
+  
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    errors.push('Password must contain at least one special character')
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  }
+}
+
 // Register endpoint
 router.post('/register', async (req, res) => {
   try {
@@ -16,6 +42,16 @@ router.post('/register', async (req, res) => {
     if (!firstName || !lastName || !email || !password) {
       console.log('Validation failed - missing fields')
       return res.status(400).json({ message: 'All fields are required' })
+    }
+
+    // Validate password format
+    const passwordValidation = validatePassword(password)
+    if (!passwordValidation.isValid) {
+      console.log('Password validation failed:', passwordValidation.errors)
+      return res.status(400).json({ 
+        message: 'Password does not meet requirements',
+        errors: passwordValidation.errors 
+      })
     }
 
     // Check if user already exists
@@ -73,7 +109,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Find user
-    const user = UserModel.findByEmail(email)
+    const user = await UserModel.findByEmail(email)
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
@@ -85,7 +121,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Update last login
-    UserModel.updateLastLogin(user.user_id)
+    await UserModel.updateLastLogin(user.user_id)
 
     // Generate token
     const token = jwt.sign(
@@ -111,10 +147,10 @@ router.post('/login', async (req, res) => {
 })
 
 // Get profile endpoint (protected)
-router.get('/profile', authMiddleware, (req, res) => {
+router.get('/profile', authMiddleware, async (req, res) => {
   try {
-    const user = UserModel.findById(req.userId)
-    
+    const user = await UserModel.findById(req.userId)
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }

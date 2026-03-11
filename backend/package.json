@@ -1,7 +1,7 @@
 {
-  "name": "medigo-backend",
+  "name": "miniapp-backend",
   "version": "1.0.0",
-  "description": "MediGo Authentication Backend API",
+  "description": "MiniApp Authentication Backend API",
   "main": "server.js",
   "type": "module",
   "scripts": {

@@ -48,7 +48,7 @@ export default function LoginForm() {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="you@medigo.dev"
+          placeholder="you@example.com"
           required
           disabled={loading}
         />

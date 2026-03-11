@@ -6,7 +6,7 @@ export default function Login() {
     <div className="auth-container">
       <div className="auth-card">
         <h1>Login</h1>
-        <p>Welcome back to MediGo</p>
+        <p>Welcome back to MiniApp</p>
         <LoginForm />
         <p className="auth-link">
           Don't have an account? <Link to="/register">Register</Link>
